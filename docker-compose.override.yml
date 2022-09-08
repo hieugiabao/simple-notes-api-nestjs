@@ -1,0 +1,46 @@
+version: "3"
+services:
+  # node:
+  #   container_name: starter_node
+  #   command: npm run start
+  #   environment:
+  #     NPM_INSTALL: ENABLE
+  #     TYPEORM_MIGRATION: ENABLE
+  #   ports:
+  #     - 3000:3000
+  #     - 5858:5858
+
+  postgres:
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_MULTIPLE_DATABASES="starter-api","starter-api-testing"
+    volumes:
+      - ./docker-utils:/docker-entrypoint-initdb.d
+      - starter_api_data:/data/postgres
+    networks:
+      - postgres
+    ports:
+      - 5434:5432
+
+  pgadmin:
+    container_name: pgadmin-starter
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports: 
+      - 5050:80
+    networks:
+      - postgres
+    restart: unless-stopped
+volumes:
+  starter_api_data: {}
+  pgadmin:
+
+networks:
+  postgres:
+    driver: bridge
