@@ -2,7 +2,7 @@ import { Logger } from './logger';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Request, Response } from 'express';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export interface RequestLog extends Request {
   correlationId?: string | string[];
