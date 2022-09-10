@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { config } from 'dotenv';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  config({ path: './env.test' });
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
