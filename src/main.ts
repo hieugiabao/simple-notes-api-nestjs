@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   SwaggerModule.setup('api/v1', app, createDocument(app));
   await app.listen(process.env.PORT || 3000);
 }

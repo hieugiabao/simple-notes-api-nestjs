@@ -1,3 +1,4 @@
+import { DBLogger } from './db.logger';
 import { DatabaseService } from './db.service';
 import { LoggerModule } from './../logger/logger.module';
 import { ConfigModule } from './../config/config.module';
@@ -25,7 +26,7 @@ export class DBModule {
       ...connectionOptions,
       entities: dbConfig.entities,
       synchronize: false,
-      logging: false,
+      logging: true,
     };
   }
 
@@ -53,10 +54,11 @@ export class DBModule {
             DBModule.getConnectionOptions(configService, dbConfig),
           inject: [ConfigService],
         }),
+        LoggerModule,
       ],
       controllers: [],
-      providers: [DatabaseService],
-      exports: [DatabaseService],
+      providers: [DatabaseService, DBLogger],
+      exports: [DatabaseService, DBLogger],
     };
   }
 }
