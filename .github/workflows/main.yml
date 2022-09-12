@@ -31,5 +31,6 @@ jobs:
              apt-get install -y ruby-dev
       - name: deploy
         run: |
+             apt-get install git -yqq
              gem install dpl
              dpl --provider=heroku --app=$${{ secrets.NESTJS_API_APP_PRODUCTION }} --api-key=$${{ secrets.HEROKU_API_KEY }}
