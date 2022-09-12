@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    container: ruby-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: npm install
+      - name: build
+        run: npm run build:prod
+      - name: update and install ruby
+        run: |
+             apt-get update -qy 
+             apt-get install -y ruby-dev
+      - name: deploy
+        run: |
+             gem install dpl
+             dpl --provider=heroku --app=$${{ secrets.NESTJS_API_APP_PRODUCTION }} --api-key=$${{ secrets.HEROKU_API_KEY }}
