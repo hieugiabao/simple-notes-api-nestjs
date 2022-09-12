@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const typeorm = require('typeorm');
+require('dotenv').config();
+
 console.log(process.env.DATABASE_URL);
 
-module.exports = {
-  type: process.env.DB_DIALECT || 'postgres',
+const AppDataSource = new typeorm.DataSource({
+  type: 'postgres',
   url: process.env.DATABASE_URL,
-  charset: 'utf8mb4',
   synchronize: false,
   ssl:
     process.env.NODE_ENV !== 'local' && process.env.NODE_ENV !== 'test'
@@ -13,10 +16,7 @@ module.exports = {
   entities: ['dist/src/app/domain/entities/**/*.js'],
   migrations: ['dist/src/migrations/**/*.js'],
   subscribers: ['dist/src/subscriber/**/*.js'],
-  cli: {
-    entitiesDir: 'src/app/domain/entities',
-    migrationsDir: 'src/migrations',
-    subscribersDir: 'src/subscriber',
-  },
   migrationsTransactionMode: 'each',
-};
+});
+
+module.exports = { AppDataSource };
