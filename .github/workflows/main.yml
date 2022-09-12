@@ -24,7 +24,7 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: build
-        run: npm run build:prod
+        run: npm run build
       - name: update and install ruby
         run: |
              apt-get update -qy 
