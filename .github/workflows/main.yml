@@ -32,5 +32,6 @@ jobs:
       - name: deploy
         run: |
              apt-get install git -yqq
+             gem install faraday-net_http -v 2.1.0
              gem install dpl
              dpl --provider=heroku --app=$${{ secrets.NESTJS_API_APP_PRODUCTION }} --api-key=$${{ secrets.HEROKU_API_KEY }}
