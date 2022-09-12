@@ -17,7 +17,7 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    container: ruby-latest
+    container: node:16-buster-slim
     
     steps:
       - uses: actions/checkout@v2
