@@ -1,0 +1,97 @@
+name: ci
+
+on:
+  push:
+    branches: 
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+          - macos-10.15
+          - windows-2022
+        node-version:
+          - 16.x
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+
+  lint:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        node-version:
+          - 16.x
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+        continue-on-error: true
+
+  unit-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+          - macos-10.15
+          - windows-2022
+        node-version:
+          - 16.x
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn test:cov
+
+  e2e-test-postgres:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        node-version:
+          - 16.x
+    runs-on: ${{ matrix.os }}
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGERS_DB: starter-api-testing
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: root
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn test:e2e
+        env:
+          TYPEORM_TYPE: postgres
