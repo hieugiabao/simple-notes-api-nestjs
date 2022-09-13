@@ -15,7 +15,7 @@
     "test": "DOTENV_CONFIG_PATH=./env.test jest",
     "test:migration": "dotenv -e env.test -- typeorm migration:run -d ./ormconfig.ts",
     "test:watch": "DOTENV_CONFIG_PATH=./env.test jest --watch",
-    "test:cov": "DOTENV_CONFIG_PATH=./env.test jest --coverage",
+    "test:cov": "jest --coverage",
     "test:debug": "DOTENV_CONFIG_PATH=./env.test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "npm run test:migration && jest --config ./test/jest-e2e.json -runInBand",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
